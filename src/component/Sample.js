@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 
 export default function Sample() {
   const globalState = useContext(store);
-  console.log(globalState);
   const { state, dispatch } = globalState;
 
   return (
