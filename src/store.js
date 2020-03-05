@@ -1,7 +1,13 @@
 import React, { createContext, useReducer } from "react";
 import reducer from "./reducer";
 
-const initialState = { backGroundColor: "black" };
+const initialState = {
+  backGroundColor: "black",
+  count: 0,
+  user: { userName: "", passWord: "" },
+  isLoggedIn: false,
+  errorMsg: ""
+};
 const store = createContext(initialState);
 const { Provider } = store;
 

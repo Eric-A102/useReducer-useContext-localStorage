@@ -1,15 +1,14 @@
 import React, { useContext } from "react";
 import { store } from "../store";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Count from "./Count";
+import Login from "./Login";
 
 export default function Sample() {
-  const classes = useStyles();
-  const globalState = useContext(store);
-  const { state, dispatch } = globalState;
+  const { state, dispatch } = useContext(store);
 
   return (
     <>
@@ -21,11 +20,11 @@ export default function Sample() {
             backgroundColor: `${state.backGroundColor}`,
             height: "5vh",
             borderRadius: 10,
-            marginBottom: 10
+            marginBottom: 10,
+            marginTop: 50
           }}
         />
       </Container>
-
       <Button
         variant="contained"
         color="primary"
@@ -41,17 +40,8 @@ export default function Sample() {
       >
         Change to Red
       </Button>
+      <Count />
+      <Login />
     </>
   );
 }
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary
-  }
-}));
