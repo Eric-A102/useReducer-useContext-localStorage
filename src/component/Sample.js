@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Count from "./Count";
 import Login from "./Login";
+import Todo from "./Todo";
 
 export default function Sample() {
   const { state, dispatch } = useContext(store);
@@ -42,6 +43,7 @@ export default function Sample() {
       </Button>
       <Count />
       <Login />
+      <Todo />
     </>
   );
 }

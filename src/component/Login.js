@@ -68,7 +68,7 @@ export default function Counter() {
                 }}
               >
                 <TextField
-                  id="outlined-basic"
+                  id="username"
                   label="Username"
                   variant="outlined"
                   name="userName"
@@ -78,7 +78,7 @@ export default function Counter() {
 
                 <TextField
                   style={{ marginTop: 10, marginBottom: 10 }}
-                  id="outlined-basic"
+                  id="password"
                   label="Password"
                   variant="outlined"
                   name="passWord"

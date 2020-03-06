@@ -6,7 +6,15 @@ const initialState = {
   count: 0,
   user: { userName: "", passWord: "" },
   isLoggedIn: false,
-  errorMsg: ""
+  errorMsg: "",
+  todo: {
+    id: 0,
+    content: ""
+  },
+  list: [],
+  open: false,
+  processList: [],
+  doneList: []
 };
 const store = createContext(initialState);
 const { Provider } = store;
