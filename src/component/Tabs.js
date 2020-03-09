@@ -12,6 +12,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import DoneIcon from "@material-ui/icons/Done";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import * as ls from "local-storage";
 
 import AlertDialog from "./Dialog";
 
@@ -135,8 +136,10 @@ export default function SimpleTabs() {
             />
             <ArrowBackIcon
               style={{ marginLeft: 20 }}
-              id="back"
-              onClick={() => dispatch({ type: "back", index: i, id: data.id })}
+              id="backTodo"
+              onClick={() =>
+                dispatch({ type: "backTodo", index: i, id: data.id })
+              }
             />
 
             <DoneIcon
@@ -161,6 +164,13 @@ export default function SimpleTabs() {
             <DeleteIcon
               style={{ marginLeft: 50 }}
               onClick={() => handleDelete(data.id)}
+            />
+            <ArrowBackIcon
+              style={{ marginLeft: 20 }}
+              id="backInProgress"
+              onClick={() =>
+                dispatch({ type: "backInProgress", index: i, id: data.id })
+              }
             />
           </TabPanel>
         </div>

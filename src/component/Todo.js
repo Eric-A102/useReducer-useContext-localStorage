@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { Typography, Button } from "@material-ui/core";
 import { store } from "../store";
 import Tabs from "./Tabs";
+import * as ls from "local-storage";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,16 +16,28 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function Todo() {
   const { state, dispatch } = useContext(store);
-  const { todo, list } = state;
+  const { todo } = state;
   const classes = useStyles();
 
+  useEffect(() => {
+    ls.get("allList") &&
+      dispatch({
+        type: "getList"
+      });
+  }, [dispatch]);
   const handleSubmit = e => {
     e.preventDefault();
+    var existing = JSON.parse(ls.get("allList"));
+    if (existing == null) existing = [];
+    ls.set("list", JSON.stringify(todo));
+    existing.push(todo);
+    ls.set("allList", JSON.stringify(existing));
+
     dispatch({
-      type: "getList",
-      list: [...list, todo]
+      type: "getList"
     });
   };
+
   return (
     <div>
       <Typography style={{ marginTop: 10 }}>Todo List</Typography>

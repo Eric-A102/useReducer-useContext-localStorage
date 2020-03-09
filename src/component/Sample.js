@@ -4,9 +4,6 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Count from "./Count";
-import Login from "./Login";
-import Todo from "./Todo";
 
 export default function Sample() {
   const { state, dispatch } = useContext(store);
@@ -26,24 +23,23 @@ export default function Sample() {
           }}
         />
       </Container>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginRight: 10 }}
-        onClick={() => dispatch({ type: "changeColorBlue" })}
-      >
-        Change to Blue
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => dispatch({ type: "changeColorRed" })}
-      >
-        Change to Red
-      </Button>
-      <Count />
-      <Login />
-      <Todo />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginRight: 10 }}
+          onClick={() => dispatch({ type: "changeColorBlue" })}
+        >
+          Change to Blue
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => dispatch({ type: "changeColorRed" })}
+        >
+          Change to Red
+        </Button>
+      </div>
     </>
   );
 }

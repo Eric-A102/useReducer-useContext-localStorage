@@ -3,11 +3,15 @@ import { store } from "../store";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Sample from "../component/Sample";
+import * as ls from "local-storage";
+import Count from "./Count";
+import Todo from "./Todo";
 
 export default function Counter() {
   const classes = useStyles();
   const { state, dispatch } = useContext(store);
-  const { user, isLoggedIn, errorMsg } = state;
+  const { user, errorMsg, isLoggedIn } = state;
 
   const handleChange = e => {
     dispatch({
@@ -20,6 +24,11 @@ export default function Counter() {
   const handleSubmit = e => {
     e.preventDefault();
     if (user.userName === "eric" && user.passWord === "atento123") {
+      ls.set("user", {
+        stats: true,
+        Username: user.userName,
+        Password: user.passWord
+      });
       dispatch({
         type: "login"
       });
@@ -40,15 +49,31 @@ export default function Counter() {
           flexDirection: "column"
         }}
       >
-        {isLoggedIn ? (
+        {(JSON.parse(ls.get("user") === null) ? (
+          isLoggedIn
+        ) : (
+          ls.get("user").stats
+        )) ? (
           <>
-            <div style={{ marginTop: 20 }}>Welcome {user.userName}</div>
+            <div style={{ marginTop: 20 }}>
+              Welcome {ls.get("user") !== null ? ls.get("user").Username : null}
+            </div>
             <Button
               color="primary"
-              onClick={() => dispatch({ type: "logOut" })}
+              onClick={() => {
+                ls.set("user", {
+                  stats: false,
+                  Username: "",
+                  Password: ""
+                });
+                dispatch({ type: "logOut" });
+              }}
             >
               Log Out
             </Button>
+            <Sample />
+            <Count />
+            <Todo />
           </>
         ) : (
           <>

@@ -1,11 +1,11 @@
 import React from "react";
-import Sample from "./component/Sample";
+import Login from "./component/Login";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <Sample />
+      <Login />
     </div>
   );
 }

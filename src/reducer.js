@@ -1,3 +1,4 @@
+import * as ls from "local-storage";
 export default function reducer(state, action) {
   // console.log(action);
   switch (action.type) {
@@ -20,12 +21,20 @@ export default function reducer(state, action) {
         user: { ...state.user, [action.field]: action.value }
       };
     case "login":
-      return { ...state, isLoggedIn: true, errorMsg: "" };
+      return {
+        ...state,
+        isLoggedIn: ls.get("user") === null ? ls.get("user").stats : true,
+        errorMsg: ""
+      };
     case "logOut":
       return {
         ...state,
-        isLoggedIn: false,
-        user: { ...state.user, userName: "", passWord: "" }
+        user: {
+          ...state.user,
+          isLoggedIn: ls.get("user") === null ? ls.get("user").stats : false,
+          userName: "",
+          passWord: ""
+        }
       };
     case "error":
       return { ...state, errorMsg: "Invalid username or password" };
@@ -41,7 +50,7 @@ export default function reducer(state, action) {
     case "getList":
       return {
         ...state,
-        list: action.list,
+        list: JSON.parse(ls.get("allList")),
         todo: { ...state.todo, id: state.todo.id + 1, content: "" }
       };
     case "delete":
@@ -103,7 +112,7 @@ export default function reducer(state, action) {
         ],
         processList: state.processList.filter(todo => todo.id !== action.id)
       };
-    case "back":
+    case "backTodo":
       return {
         ...state,
         list: [
@@ -111,6 +120,15 @@ export default function reducer(state, action) {
           ...state.processList.filter(todo => todo.id === action.id)
         ],
         processList: state.processList.filter(todo => todo.id !== action.id)
+      };
+    case "backInProgress":
+      return {
+        ...state,
+        processList: [
+          ...state.processList,
+          ...state.doneList.filter(todo => todo.id === action.id)
+        ],
+        doneList: state.doneList.filter(todo => todo.id !== action.id)
       };
 
     default:
