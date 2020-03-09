@@ -8,6 +8,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import Tab from "@material-ui/core/Tab";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import DoneIcon from "@material-ui/icons/Done";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
@@ -53,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 export default function SimpleTabs() {
   const classes = useStyles();
   const { state, dispatch } = useContext(store);
-  const { list, processList } = state;
+  const { list, processList, doneList } = state;
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -70,9 +72,7 @@ export default function SimpleTabs() {
       value: todoContent
     });
   };
-  const handleStatus = (i, todoId) => {
-    dispatch({ type: "process", index: i, id: todoId });
-  };
+
   return (
     <div className={classes.root} style={{ marginLeft: "37%" }}>
       <AppBar position="static">
@@ -106,10 +106,12 @@ export default function SimpleTabs() {
               style={{ marginLeft: 20 }}
               onClick={() => handleEdit(i, data.id, data.content)}
             />
-
             <ArrowForwardIcon
               style={{ marginLeft: 20 }}
-              onClick={() => handleStatus(i, data.id)}
+              id="inProcess"
+              onClick={() =>
+                dispatch({ type: "process", index: i, id: data.id })
+              }
             />
           </TabPanel>
         </div>
@@ -124,21 +126,45 @@ export default function SimpleTabs() {
           }}
         >
           <TabPanel value={value} index={1}>
+            <span onClick={() => handleEdit(i, data.id, data.content)}>
+              {data.content}
+            </span>
+            <DeleteIcon
+              style={{ marginLeft: 50 }}
+              onClick={() => handleDelete(data.id)}
+            />
+            <ArrowBackIcon
+              style={{ marginLeft: 20 }}
+              id="back"
+              onClick={() => dispatch({ type: "back", index: i, id: data.id })}
+            />
+
+            <DoneIcon
+              style={{ marginLeft: 20 }}
+              id="done"
+              onClick={() => dispatch({ type: "done", index: i, id: data.id })}
+            />
+          </TabPanel>
+        </div>
+      ))}
+      {doneList.map((data, i) => (
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center"
+          }}
+        >
+          <TabPanel value={value} index={2}>
             {data.content}
             <DeleteIcon
               style={{ marginLeft: 50 }}
               onClick={() => handleDelete(data.id)}
             />
-            <EditIcon
-              style={{ marginLeft: 20 }}
-              onClick={() => handleEdit(i, data.id, data.content)}
-            />
           </TabPanel>
         </div>
       ))}
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
       <AlertDialog />
     </div>
   );

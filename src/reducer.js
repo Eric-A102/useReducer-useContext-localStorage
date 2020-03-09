@@ -35,7 +35,6 @@ export default function reducer(state, action) {
         ...state,
         todo: {
           ...state.todo,
-          id: [...state.list].length + 1,
           content: action.value
         }
       };
@@ -43,12 +42,14 @@ export default function reducer(state, action) {
       return {
         ...state,
         list: action.list,
-        todo: { ...state.todo, content: "" }
+        todo: { ...state.todo, id: state.todo.id + 1, content: "" }
       };
     case "delete":
       return {
         ...state,
-        list: state.list.filter(todo => todo.id !== action.id)
+        list: state.list.filter(todo => todo.id !== action.id),
+        processList: state.processList.filter(todo => todo.id !== action.id),
+        doneList: state.doneList.filter(todo => todo.id !== action.id)
       };
     case "edit":
       return {
@@ -75,6 +76,10 @@ export default function reducer(state, action) {
         ...state.list.map(
           (item, i) => i === action.index && (item.content = action.content)
         ),
+        ...state.processList.map(
+          (item, i) => i === action.index && (item.content = action.content)
+        ),
+
         open: false,
         todo: { ...state.todo, content: "" }
       };
@@ -89,6 +94,25 @@ export default function reducer(state, action) {
         ],
         list: state.list.filter(todo => todo.id !== action.id)
       };
+    case "done":
+      return {
+        ...state,
+        doneList: [
+          ...state.doneList,
+          ...state.processList.filter(todo => todo.id === action.id)
+        ],
+        processList: state.processList.filter(todo => todo.id !== action.id)
+      };
+    case "back":
+      return {
+        ...state,
+        list: [
+          ...state.list,
+          ...state.processList.filter(todo => todo.id === action.id)
+        ],
+        processList: state.processList.filter(todo => todo.id !== action.id)
+      };
+
     default:
       throw new Error();
   }
