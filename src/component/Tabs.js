@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { store } from "../store";
 import { makeStyles } from "@material-ui/core/styles";
@@ -56,14 +56,34 @@ const useStyles = makeStyles(theme => ({
 export default function SimpleTabs() {
   const classes = useStyles();
   const { state, dispatch } = useContext(store);
-  const { list, processList, doneList } = state;
+  const { allList, processList, doneList } = state;
   const [value, setValue] = React.useState(0);
+  useEffect(() => {
+    ls.get("processList") ||
+      (ls.get("doneList") &&
+        dispatch({
+          type: "getList"
+        }));
+  }, [dispatch]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const handleDelete = todoId => {
-    dispatch({ type: "delete", id: todoId });
+  const handleDelete = (todoId, process) => {
+    dispatch({ type: "delete", id: todoId, process: process });
+  };
+
+  const handleProcess = (todoId, process, from) => {
+    dispatch({
+      type: "process",
+      id: todoId,
+      process: process,
+      from: from
+    });
+  };
+
+  const handleBack = (todoId, process, from) => {
+    dispatch({ type: "back", id: todoId, process: process, from: from });
   };
   const handleEdit = (i, todoId, todoContent) => {
     dispatch({
@@ -88,7 +108,7 @@ export default function SimpleTabs() {
           <Tab label="Done" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      {list.map((data, i) => (
+      {allList.map((data, i) => (
         <div
           key={i}
           style={{
@@ -101,7 +121,7 @@ export default function SimpleTabs() {
             {data.content}
             <DeleteIcon
               style={{ marginLeft: 50 }}
-              onClick={() => handleDelete(data.id)}
+              onClick={() => handleDelete(data.id, "allList")}
             />
             <EditIcon
               style={{ marginLeft: 20 }}
@@ -109,10 +129,7 @@ export default function SimpleTabs() {
             />
             <ArrowForwardIcon
               style={{ marginLeft: 20 }}
-              id="inProcess"
-              onClick={() =>
-                dispatch({ type: "process", index: i, id: data.id })
-              }
+              onClick={() => handleProcess(data.id, "processList", "allList")}
             />
           </TabPanel>
         </div>
@@ -132,20 +149,18 @@ export default function SimpleTabs() {
             </span>
             <DeleteIcon
               style={{ marginLeft: 50 }}
-              onClick={() => handleDelete(data.id)}
+              onClick={() => handleDelete(data.id, "processList")}
             />
             <ArrowBackIcon
               style={{ marginLeft: 20 }}
               id="backTodo"
-              onClick={() =>
-                dispatch({ type: "backTodo", index: i, id: data.id })
-              }
+              onClick={() => handleBack(data.id, "allList", "processList")}
             />
 
             <DoneIcon
               style={{ marginLeft: 20 }}
               id="done"
-              onClick={() => dispatch({ type: "done", index: i, id: data.id })}
+              onClick={() => handleProcess(data.id, "doneList", "processList")}
             />
           </TabPanel>
         </div>
@@ -163,14 +178,12 @@ export default function SimpleTabs() {
             {data.content}
             <DeleteIcon
               style={{ marginLeft: 50 }}
-              onClick={() => handleDelete(data.id)}
+              onClick={() => handleDelete(data.id, "doneList")}
             />
             <ArrowBackIcon
               style={{ marginLeft: 20 }}
               id="backInProgress"
-              onClick={() =>
-                dispatch({ type: "backInProgress", index: i, id: data.id })
-              }
+              onClick={() => handleBack(data.id, "processList", "doneList")}
             />
           </TabPanel>
         </div>

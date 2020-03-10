@@ -71,8 +71,8 @@ export default function Counter() {
             >
               Log Out
             </Button>
-            <Sample />
-            <Count />
+            {/* <Sample />
+            <Count /> */}
             <Todo />
           </>
         ) : (

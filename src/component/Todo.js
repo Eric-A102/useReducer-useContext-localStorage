@@ -25,11 +25,11 @@ export default function Todo() {
         type: "getList"
       });
   }, [dispatch]);
+
   const handleSubmit = e => {
     e.preventDefault();
     var existing = JSON.parse(ls.get("allList"));
     if (existing == null) existing = [];
-    ls.set("list", JSON.stringify(todo));
     existing.push(todo);
     ls.set("allList", JSON.stringify(existing));
 

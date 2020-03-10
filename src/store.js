@@ -11,7 +11,7 @@ const initialState = {
     id: 0,
     content: ""
   },
-  list: [],
+  allList: [],
   open: false,
   processList: [],
   doneList: []
