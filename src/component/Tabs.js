@@ -12,6 +12,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import DoneIcon from "@material-ui/icons/Done";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Tooltip from "@material-ui/core/Tooltip";
 import * as ls from "local-storage";
 
 import AlertDialog from "./Dialog";
@@ -82,15 +83,13 @@ export default function SimpleTabs() {
     });
   };
 
-  const handleBack = (todoId, process, from) => {
-    dispatch({ type: "back", id: todoId, process: process, from: from });
-  };
-  const handleEdit = (i, todoId, todoContent) => {
+  const handleEdit = (i, todoId, todoContent, process) => {
     dispatch({
       type: "edit",
       index: i,
       id: todoId,
-      value: todoContent
+      value: todoContent,
+      process: process
     });
   };
 
@@ -108,86 +107,136 @@ export default function SimpleTabs() {
           <Tab label="Done" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      {allList.map((data, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center"
-          }}
-        >
-          <TabPanel value={value} index={0}>
-            {data.content}
-            <DeleteIcon
-              style={{ marginLeft: 50 }}
-              onClick={() => handleDelete(data.id, "allList")}
-            />
-            <EditIcon
-              style={{ marginLeft: 20 }}
-              onClick={() => handleEdit(i, data.id, data.content)}
-            />
-            <ArrowForwardIcon
-              style={{ marginLeft: 20 }}
-              onClick={() => handleProcess(data.id, "processList", "allList")}
-            />
-          </TabPanel>
-        </div>
-      ))}
-      {processList.map((data, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center"
-          }}
-        >
-          <TabPanel value={value} index={1}>
-            <span onClick={() => handleEdit(i, data.id, data.content)}>
+      {allList.length ? (
+        allList.map((data, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
+          >
+            <TabPanel value={value} index={0}>
               {data.content}
-            </span>
-            <DeleteIcon
-              style={{ marginLeft: 50 }}
-              onClick={() => handleDelete(data.id, "processList")}
-            />
-            <ArrowBackIcon
-              style={{ marginLeft: 20 }}
-              id="backTodo"
-              onClick={() => handleBack(data.id, "allList", "processList")}
-            />
-
-            <DoneIcon
-              style={{ marginLeft: 20 }}
-              id="done"
-              onClick={() => handleProcess(data.id, "doneList", "processList")}
-            />
-          </TabPanel>
-        </div>
-      ))}
-      {doneList.map((data, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center"
-          }}
-        >
-          <TabPanel value={value} index={2}>
-            {data.content}
-            <DeleteIcon
-              style={{ marginLeft: 50 }}
-              onClick={() => handleDelete(data.id, "doneList")}
-            />
-            <ArrowBackIcon
-              style={{ marginLeft: 20 }}
-              id="backInProgress"
-              onClick={() => handleBack(data.id, "processList", "doneList")}
-            />
-          </TabPanel>
-        </div>
-      ))}
+              <Tooltip title="Delete" arrow>
+                <DeleteIcon
+                  style={{ marginLeft: 50 }}
+                  onClick={() => handleDelete(data.id, "allList")}
+                />
+              </Tooltip>
+              <Tooltip title="Edit" arrow>
+                <EditIcon
+                  style={{ marginLeft: 20 }}
+                  onClick={() =>
+                    handleEdit(i, data.id, data.content, "allList")
+                  }
+                />
+              </Tooltip>
+              <Tooltip title="In Progress ?" arrow>
+                <ArrowForwardIcon
+                  style={{ marginLeft: 20 }}
+                  onClick={() =>
+                    handleProcess(data.id, "processList", "allList")
+                  }
+                />
+              </Tooltip>
+            </TabPanel>
+          </div>
+        ))
+      ) : (
+        <TabPanel value={value} index={0}>
+          No Data
+        </TabPanel>
+      )}
+      {processList.length ? (
+        processList.map((data, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
+          >
+            <TabPanel value={value} index={1}>
+              <Tooltip title="Edit" arrow>
+                <span
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    handleEdit(i, data.id, data.content, "processList")
+                  }
+                >
+                  {data.content}
+                </span>
+              </Tooltip>
+              <Tooltip title="Delete" arrow>
+                <DeleteIcon
+                  style={{ marginLeft: 50 }}
+                  onClick={() => handleDelete(data.id, "processList")}
+                />
+              </Tooltip>
+              <Tooltip title="Back To do?" arrow>
+                <ArrowBackIcon
+                  style={{ marginLeft: 20 }}
+                  id="backTodo"
+                  onClick={() =>
+                    handleProcess(data.id, "allList", "processList")
+                  }
+                />
+              </Tooltip>
+              <Tooltip title="Done?" arrow>
+                <DoneIcon
+                  style={{ marginLeft: 20 }}
+                  id="done"
+                  onClick={() =>
+                    handleProcess(data.id, "doneList", "processList")
+                  }
+                />
+              </Tooltip>
+            </TabPanel>
+          </div>
+        ))
+      ) : (
+        <TabPanel value={value} index={1}>
+          No Data
+        </TabPanel>
+      )}
+      {doneList.length ? (
+        doneList.map((data, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
+          >
+            <TabPanel value={value} index={2}>
+              {data.content}
+              <Tooltip title="Delete" arrow>
+                <DeleteIcon
+                  style={{ marginLeft: 50 }}
+                  onClick={() => handleDelete(data.id, "doneList")}
+                />
+              </Tooltip>
+              <Tooltip title="Back to Progress" arrow>
+                <ArrowBackIcon
+                  style={{ marginLeft: 20 }}
+                  id="backInProgress"
+                  onClick={() =>
+                    handleProcess(data.id, "processList", "doneList")
+                  }
+                />
+              </Tooltip>
+            </TabPanel>
+          </div>
+        ))
+      ) : (
+        <TabPanel value={value} index={2}>
+          No Data
+        </TabPanel>
+      )}
       <AlertDialog />
     </div>
   );

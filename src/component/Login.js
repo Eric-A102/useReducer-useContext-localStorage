@@ -7,6 +7,7 @@ import Sample from "../component/Sample";
 import * as ls from "local-storage";
 import Count from "./Count";
 import Todo from "./Todo";
+import AppBar from "./AppBar";
 
 export default function Counter() {
   const classes = useStyles();
@@ -24,6 +25,8 @@ export default function Counter() {
   const handleSubmit = e => {
     e.preventDefault();
     if (user.userName === "eric" && user.passWord === "atento123") {
+      ls.set("processList", "[]");
+      ls.set("doneList", "[]");
       ls.set("user", {
         stats: true,
         Username: user.userName,
@@ -55,22 +58,7 @@ export default function Counter() {
           ls.get("user").stats
         )) ? (
           <>
-            <div style={{ marginTop: 20 }}>
-              Welcome {ls.get("user") !== null ? ls.get("user").Username : null}
-            </div>
-            <Button
-              color="primary"
-              onClick={() => {
-                ls.set("user", {
-                  stats: false,
-                  Username: "",
-                  Password: ""
-                });
-                dispatch({ type: "logOut" });
-              }}
-            >
-              Log Out
-            </Button>
+            <AppBar />
             {/* <Sample />
             <Count /> */}
             <Todo />

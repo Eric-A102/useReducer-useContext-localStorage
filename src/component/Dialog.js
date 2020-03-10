@@ -17,7 +17,12 @@ export default function AlertDialog() {
     dispatch({ type: "close" });
   };
   const handleSubmit = () => {
-    dispatch({ type: "doneEditing", index: todo.index, content: todo.content });
+    dispatch({
+      type: "doneEditing",
+      index: todo.index,
+      content: todo.content,
+      process: todo.process
+    });
   };
 
   return (
@@ -39,8 +44,6 @@ export default function AlertDialog() {
             onChange={e =>
               dispatch({
                 type: "editing",
-                index: todo.index,
-                id: todo.id,
                 value: e.target.value
               })
             }

@@ -34,11 +34,15 @@ export default function reducer(state, action) {
       };
 
     case "logOut":
+      ls.remove("user");
+      ls.remove("processList");
+      ls.remove("doneList");
       return {
         ...state,
+        isLoggedIn: ls.get("user") === null ? false : ls.get("user").stats,
         user: {
           ...state.user,
-          isLoggedIn: ls.get("user") === null ? ls.get("user").stats : false,
+
           userName: "",
           passWord: ""
         }
@@ -67,28 +71,17 @@ export default function reducer(state, action) {
       };
 
     case "delete":
-      if (action.process === "allList") {
-        ls.set(
-          "allList",
-          JSON.stringify(newList.filter(todo => todo.id !== action.id))
-        );
-        return {
-          ...state,
-          allList: JSON.parse(ls.get(action.process))
-        };
-      } else if (action.process === "processList") {
-        ls.set(
-          "processList",
-          JSON.stringify(newList.filter(todo => todo.id !== action.id))
-        );
-        return { ...state, processList: JSON.parse(ls.get(action.process)) };
-      } else {
-        ls.set(
-          "doneList",
-          JSON.stringify(newList.filter(todo => todo.id !== action.id))
-        );
-        return { ...state, doneList: JSON.parse(ls.get(action.process)) };
-      }
+      ls.set(
+        `${action.process}`,
+        JSON.stringify(newList.filter(todo => todo.id !== action.id))
+      );
+      return {
+        ...state,
+        [action.process]: JSON.parse(ls.get(action.process))
+      };
+
+    case "close":
+      return { ...state, open: false, todo: { ...state.todo, content: "" } };
 
     case "edit":
       return {
@@ -98,7 +91,8 @@ export default function reducer(state, action) {
           ...state.todo,
           index: action.index,
           id: action.id,
-          content: action.value
+          content: action.value,
+          process: action.process
         }
       };
 
@@ -112,45 +106,18 @@ export default function reducer(state, action) {
       };
 
     case "doneEditing":
+      newList.map(
+        (item, i) => i === action.index && (item.content = action.content)
+      );
+      ls.set(`${action.process}`, JSON.stringify(newList));
       return {
         ...state,
-        ...state.allList.map(
-          (item, i) => i === action.index && (item.content = action.content)
-        ),
-        ...state.processList.map(
-          (item, i) => i === action.index && (item.content = action.content)
-        ),
-
+        [action.process]: JSON.parse(ls.get(`${action.process}`)),
         open: false,
         todo: { ...state.todo, content: "" }
       };
 
-    case "close":
-      return { ...state, open: false, todo: { ...state.todo, content: "" } };
-
     case "process":
-      if (newList == null) newList = [];
-      JSON.parse(ls.get(`${action.from}`))
-        .filter(todo => {
-          return todo.id === action.id;
-        })
-        .map(res => newList.push(res));
-      ls.set(`${action.process}`, JSON.stringify(newList));
-      ls.set(
-        `${action.from}`,
-        JSON.stringify(
-          JSON.parse(ls.get(`${action.from}`)).filter(
-            todo => todo.id !== action.id
-          )
-        )
-      );
-      return {
-        ...state,
-        [action.process]: JSON.parse(ls.get(`${action.process}`)),
-        [action.from]: JSON.parse(ls.get(`${action.from}`))
-      };
-
-    case "back":
       JSON.parse(ls.get(`${action.from}`))
         .filter(todo => {
           return todo.id === action.id;

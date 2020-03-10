@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { Typography, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { store } from "../store";
 import Tabs from "./Tabs";
 import * as ls from "local-storage";
@@ -39,14 +39,14 @@ export default function Todo() {
   };
 
   return (
-    <div>
-      <Typography style={{ marginTop: 10 }}>Todo List</Typography>
+    <div style={{ marginLeft: 30, marginTop: 30 }}>
       <form className={classes.root} noValidate autoComplete="off">
         <TextField
           id="outlined-basic"
           label="Todo"
           variant="outlined"
           name="todo"
+          multiline
           value={todo.content}
           onChange={e =>
             dispatch({
@@ -59,7 +59,7 @@ export default function Todo() {
       <Button variant="contained" color="primary" onClick={handleSubmit}>
         Submit
       </Button>
-      <div className={classes.demo} style={{ marginTop: 10 }}>
+      <div className={classes.demo} style={{ marginTop: 20 }}>
         <Tabs />
       </div>
     </div>
